@@ -44,7 +44,7 @@ class TestCRUD(unittest.TestCase):
     def tearDown(self):
         pass
 
-
+        # Partie James
     @patch("crud.CRUD.read_users_file")    
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.modify_users_file")
@@ -138,7 +138,7 @@ class TestCRUD(unittest.TestCase):
         self, mock_read_users_file
     ):
         pass
-
+  # Partie Masabbir
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_id_for_valid_user_name(self, mock_read_users_file):
         pass
@@ -223,7 +223,7 @@ class TestCRUD(unittest.TestCase):
         self, mock_read_users_file, mock_modify_users_file
     ):
         pass
-
+        # partie de Nicolas
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
     def test_remove_user_Passes_correct_value_to_modify_users_file(

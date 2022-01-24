@@ -36,7 +36,7 @@ class TestEmailAnalyzer(unittest.TestCase):
 
     def tearDown(self):
         pass
-
+# Partie James
     @patch("email_analyzer.EmailAnalyzer.clean_text")
     @patch("email_analyzer.EmailAnalyzer.spam_ham_body_prob")
     @patch("email_analyzer.EmailAnalyzer.spam_ham_subject_prob")
@@ -60,7 +60,7 @@ class TestEmailAnalyzer(unittest.TestCase):
         La sortie de la fonction doit être False si probabilité spam < probabilité ham
         """
         pass
-
+# Partie Masabbir
     @patch("email_analyzer.EmailAnalyzer.load_dict")
     def test_spam_ham_body_prob_Returns_expected_probability(self, mock_load_dict):
         """

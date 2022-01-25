@@ -153,7 +153,7 @@ class TestCRUD(unittest.TestCase):
     def test_get_user_id_Returns_false_for_invalid_user_name(
         self, mock_read_users_file
     ):
-        mock_read_users_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
         crud = CRUD()
         self.assertEqual(crud.get_user_id("InvalidName"),False)
 

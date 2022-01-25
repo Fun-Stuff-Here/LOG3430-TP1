@@ -76,7 +76,10 @@ class TestCRUD(unittest.TestCase):
         self.modify_groups_file(data) -> "data" doit avoir un format et contenu attendu
         il faut utiliser ".assert_called_once_with(expected_data)"
         """
-        pass
+        mock_read_groups_file.return_value= self.groups_data
+        crud = CRUD()
+        crud.modify_groups_file(crud.read_groups_file())
+        mock_modify_groups_file.assert_called_once_with(self.groups_data)       
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_false_for_invalid_id(self, mock_read_users_file):
@@ -85,9 +88,12 @@ class TestCRUD(unittest.TestCase):
         est retourne par la fonction si ID non-existant est utilisé
         il faut utiliser ".assertEqual()" ou ".assertFalse()"
         """
-        pass
-        
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        self.assertEqual(crud.get_user_data(100,"name"),False)
 
+        
+# ?
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_false_for_invalid_field(self, mock_read_users_file):
         """Description: il faut utiliser le mock de fonction "read_groups_file",
@@ -95,7 +101,9 @@ class TestCRUD(unittest.TestCase):
         est retourne par la fonction si champ non-existant est utilisé
         il faut utiliser ".assertEqual()" ou ".assertFalse()"
         """
-        pass
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        self.assertEqual(crud.get_user_data(1,"FauxChamp"),False)
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_correct_value_if_field_and_id_are_valid(
@@ -106,15 +114,19 @@ class TestCRUD(unittest.TestCase):
         si champ et id valide sont utilises
         il faut utiliser ".assertEqual()""
         """
-        pass
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        self.assertEqual(crud.get_user_data(2,"SpamN"),self.users_data["2"]["SpamN"])
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_data_Returns_false_for_invalid_id(self, mock_read_groups_file):
         """
         Similaire au test_get_user_data_Returns_false_for_invalid_id mais pour un groupe
         """
-        pass
-
+        mock_read_groups_file.return_value = self.groups_data
+        crud = CRUD()
+        self.assertEqual(crud.get_groups_data(100,"name"),False)
+  # ?
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_data_Returns_false_for_invalid_field(
         self, mock_read_groups_file
@@ -122,7 +134,9 @@ class TestCRUD(unittest.TestCase):
         """
         Similaire au test_get_user_data_Returns_false_for_invalid_field mais pour un groupe
         """
-        pass
+        mock_read_groups_file.return_value = self.groups_data
+        crud = CRUD()
+        self.assertEqual(crud.get_groups_data(1,"FauxChamp"),False)
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_data_Returns_correct_value_if_field_and_id_are_valid(
@@ -131,13 +145,19 @@ class TestCRUD(unittest.TestCase):
         """
         Similaire au test_get_user_data_Returns_correct_value_if_field_and_id_are_valid mais pour un groupe
         """
-        pass
+        mock_read_groups_file.return_value = self.groups_data
+        crud = CRUD()
+        self.assertEqual(crud.get_groups_data(2,"name"),self.groups_data["2"]["name"])
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_false_for_invalid_user_name(
         self, mock_read_users_file
     ):
-        pass
+        mock_read_users_file.return_value = self.groups_data
+        crud = CRUD()
+        self.assertEqual(crud.get_user_id("InvalidName"),False)
+
+        
   # Partie Masabbir
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_id_for_valid_user_name(self, mock_read_users_file):

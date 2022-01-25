@@ -113,13 +113,10 @@ class VocabularyCreator:
            "p_body_spam": p_body_spam,
            "p_body_ham": p_body_ham
         }
-
+        
         # Save data
-        with open(self.vocabulary, "w") as outfile:
-            json.dump(self.voc_data, outfile, indent=4)
+        return self.write_data_to_vocab_file(self.voc_data)
 
-        print("\n")
-        return True
 
     def load_dict(self):
         with open(self.train_set) as json_data:

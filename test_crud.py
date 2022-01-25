@@ -161,19 +161,24 @@ class TestCRUD(unittest.TestCase):
   # Partie Masabbir
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_id_for_valid_user_name(self, mock_read_users_file):
-        pass
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        self.assertEqual(crud.get_user_id('alex@gmail.com'), '1')
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_id_Returns_false_for_invalid_group_name(
         self, mock_read_groups_file
     ):
-        pass
+        mock_read_groups_file.return_value = self.groups_data
+        crud = CRUD()
+        self.assertFalse(crud.get_group_id('enemies')) #Group qui n'existe pas
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_id_Returns_id_for_valid_group_name(self, mock_read_groups_file):
+        mock_read_groups_file.return_value = self.groups_data
+        crud = CRUD()
+        self.assertEqual(crud.get_group_id('friends'), '2')
         
-        pass
-
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
     # Modify_user_file mock est inutile pour tester False pour update
@@ -183,7 +188,9 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_users_file' et 'modify_users_file'
         (ou selon votre realisation)
         """
-        pass
+        mock_read_users_file.return_data = self.users_data
+        crud = CRUD()
+        self.assertFalse(crud.update_users(0, "Trust", 60)) #ID inexistant
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
@@ -193,7 +200,9 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_users_file' et 'modify_users_file'
         (ou selon votre realisation)
         """
-        pass
+        mock_read_users_file.return_data = self.users_data
+        crud = CRUD()
+        self.assertFalse(crud.update_users(1, "banana", 60)) #Field inexistant
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
@@ -204,7 +213,10 @@ class TestCRUD(unittest.TestCase):
         (ou selon votre realisation)
         Il faut utiliser ".assert_called_once_with(expected_data)"
         """
-        pass
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        crud.update_users(1, "Trust", 78)
+        mock_modify_users_file.assert_called_once_with(self.users_data) # Si les données sont valides, la fonction est appelée 1 fois à la fin.
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
@@ -214,7 +226,9 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_groups_file' et 'modify_groups_file'
         (ou selon votre realisation)
         """
-        pass
+        mock_read_groups_file.return_data = self.groups_data
+        crud = CRUD()
+        self.assertFalse(crud.update_groups(6, "Trust", 60)) # ID inexistant
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
@@ -224,7 +238,9 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_groups_file' et 'modify_groups_file'
         (ou selon votre realisation)
         """
-        pass
+        mock_read_groups_file.return_data = self.groups_data
+        crud = CRUD()
+        self.assertFalse(crud.update_groups(0, "Tru", 60)) # Field inexistant
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
@@ -235,14 +251,19 @@ class TestCRUD(unittest.TestCase):
         (ou selon votre realisation)
         Il faut utiliser ".assert_called_once_with(expected_data)"
         """
-        pass
+        mock_read_groups_file.return_value = self.groups_data
+        crud = CRUD()
+        crud.update_groups(1, "Trust", 78)
+        mock_modify_groups_file.assert_called_once_with(self.groups_data) # Si les données sont valides, la fonction est appelée 1 fois à la fin.
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
     def test_remove_user_Returns_false_for_invalid_id(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        pass
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        self.assertFalse(crud.remove_user(3)) # ID inexistant
 
         # partie de Nicolas
     @patch("crud.CRUD.modify_users_file")

@@ -1,4 +1,3 @@
-import email
 import json
 
 from email_analyzer import EmailAnalyzer
@@ -14,20 +13,20 @@ class TestEmailAnalyzer(unittest.TestCase):
         self.clean_subject = []  # données pour mocker "return_value" du "clean_text"
         self.clean_body = []  # données pour mocker "return_value" du "clean_text"
         self.spam_ham_body_prob_true = (
-            0,
-            0,
+            0.4,
+            0.3,
         )  # données pour mocker "return_value" du "spam_ham_body_prob"
         self.spam_ham_subject_prob_true = (
-            0,
-            0,
+            0.4,
+            0.3,
         )  # données pour mocker "return_value" du "subject_spam_ham_prob"
         self.spam_ham_body_prob_false = (
-            0,
-            0,
+            0.3,
+            0.4,
         )  # données pour mocker "return_value" du "spam_ham_body_prob"
         self.spam_ham_subject_prob_false = (
-            0,
-            0,
+            0.3,
+            0.4,
         )  # données pour mocker "return_value" du "subject_spam_ham_prob"
         self.vocab = (
             {    
@@ -43,7 +42,7 @@ class TestEmailAnalyzer(unittest.TestCase):
     def tearDown(self):
         pass
 # Partie James
-    @patch("email_analyzer.EmailAnalyzer.clean_text")
+    @patch("email_analyzer.TextCleaning.clean_text")
     @patch("email_analyzer.EmailAnalyzer.spam_ham_body_prob")
     @patch("email_analyzer.EmailAnalyzer.spam_ham_subject_prob")
     def test_is_spam_Returns_True_if_spam_prob_is_higher(
@@ -53,10 +52,12 @@ class TestEmailAnalyzer(unittest.TestCase):
         Il faut mocker les fonctions "spam_ham_body_prob" et "subject_spam_ham_prob".
         La sortie de la fonction doit être True si probabilité spam > probabilité ham
         """
+        mock_spam_ham_subject_prob.return_value = self.spam_ham_subject_prob_true
+        mock_spam_ham_body_prob.return_value = self.spam_ham_body_prob_true
+        email = EmailAnalyzer()
+        self.assertEqual(email.is_spam(self.subject,self.body),True)
 
-        pass
-
-    @patch("email_analyzer.EmailAnalyzer.clean_text")
+    @patch("email_analyzer.TextCleaning.clean_text")
     @patch("email_analyzer.EmailAnalyzer.spam_ham_body_prob")
     @patch("email_analyzer.EmailAnalyzer.spam_ham_subject_prob")
     def test_is_spam_Returns_False_if_spam_prob_is_lower(
@@ -66,7 +67,10 @@ class TestEmailAnalyzer(unittest.TestCase):
         Il faut mocker les fonctions "spam_ham_body_prob" et "subject_spam_ham_prob".
         La sortie de la fonction doit être False si probabilité spam < probabilité ham
         """
-        pass
+        mock_spam_ham_subject_prob.return_value = self.spam_ham_subject_prob_false
+        mock_spam_ham_body_prob.return_value = self.spam_ham_subject_prob_false
+        email = EmailAnalyzer()
+        self.assertEqual(email.is_spam(self.subject,self.body),False)
 
 # Partie Masabbir
     @patch("email_analyzer.EmailAnalyzer.load_dict")

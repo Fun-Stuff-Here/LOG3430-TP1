@@ -41,14 +41,14 @@ class RENEGE:
         i = 0
         email_count = len(emails["dataset"])
         # Load emails
-        for email in emails["dataset"]:    
+        for email in emails["dataset"]:
             i += 1
             print("\rEmail " + str(i) + "/" + str(email_count), end="")
 
             data    = email["mail"]
             subject = data["Subject"]
             name    = data["From"]
-            date    = data["Date"]            
+            date    = data["Date"]
             body    = data["Body"]
             is_spam = data["Spam"]
 
@@ -61,7 +61,7 @@ class RENEGE:
                 if not self.crud.add_new_user(name, date):
                     return False
 
-                user_id = self.crud.get_user_id(name) 
+                user_id = self.crud.get_user_id(name)
 
             # Update user's emails info
             if is_spam == "true":
@@ -81,7 +81,7 @@ class RENEGE:
 
                 except RuntimeError:
                     return False
-        
+
         print("\n")
 
         return True
@@ -93,7 +93,7 @@ class RENEGE:
         Sortie: bool, 'True' pour success, 'False' dans le cas de failure.
         '''
 
-        # Update last / first seen date 
+        # Update last / first seen date
         new_date = self.crud.convert_to_unix(new_user_date)
         if new_date > self.crud.get_user_data(user_id, "Date_of_last_seen_message"):
             if not self.crud.update_users(user_id, "Date_of_last_seen_message", new_user_date):
@@ -102,7 +102,7 @@ class RENEGE:
             if not self.crud.update_users(user_id, "Date_of_first_seen_message", new_user_date):
                 return False
 
-        # Update trust score 
+        # Update trust score
         spam_n = self.crud.get_user_data(user_id, "SpamN") + new_email_spam
         ham_n  = self.crud.get_user_data(user_id, "HamN") + new_email_ham
 
@@ -125,7 +125,7 @@ class RENEGE:
         Description: fonction pour modifier l'information de groupe dans lequel 
         l'utilisateur est present (trust level, etc).
         Sortie: bool, 'True' pour success, 'False' dans le cas de failure.
-        '''        
+        '''
         try:
             # Get list of users and update it
             users_list = self.crud.get_groups_data(group_id, "List_of_members")
@@ -135,7 +135,7 @@ class RENEGE:
 
             # Get data for trust update
             user_count = len(users_list)
-            trust_lvl  = 0      
+            trust_lvl  = 0
 
             # Compute group's trust
             for user in users_list:
@@ -143,10 +143,10 @@ class RENEGE:
                 trust_lvl   += self.crud.get_user_data(curr_user_id, "Trust")
 
             if(trust_lvl > 100):
-                trust_lvl = 100 
-            
+                trust_lvl = 100
+
             # Update the group with the new trust level and the new member list
-            if self.crud.update_groups(group_id, "Trust", trust_lvl):     
+            if self.crud.update_groups(group_id, "Trust", trust_lvl):
                 return self.crud.update_groups(group_id, 'List_of_members', users_list)
 
             return False
@@ -177,3 +177,21 @@ class RENEGE:
     ###########################################
     #             CUSTOM FUNCTION             #
     ###########################################
+
+    def trustLevel(self,user_id:int):
+        last_seeen = self.crud.get_user_data(user_id,"Date_of_last_seen_message")
+        first_seen = self.crud.get_user_data(user_id, "Date_of_first_seen_message")
+        spam_n = self.crud.get_user_data(user_id, "SpamN")
+        ham_n = self.crud.get_user_data(user_id, "HamN")
+        trust1 = (last_seeen*ham_n)/(first_seen*(ham_n+spam_n))
+        user_groups = self.crud.get_user_data(user_id, "Groups")
+        group_trusts = [user_group["Trust"] for user_group in user_groups]
+        trust2 = sum(group_trusts)/len(group_trusts)
+        if trust2 < 60:
+            return trust2
+        if trust1 > 100: 
+            return 100
+        trust = (0.6*trust1 + 0.4*trust2)/2
+        if 0 <= trust <= 100:
+            return trust
+        return False

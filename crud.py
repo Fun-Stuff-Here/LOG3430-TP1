@@ -144,7 +144,6 @@ class CRUD:
 
         except RuntimeError:
             return False
-        #print(self.groups_data)
         # Success
         return self.modify_groups_file(self.groups_data)
 

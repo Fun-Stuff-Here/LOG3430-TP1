@@ -44,7 +44,6 @@ class TestCRUD(unittest.TestCase):
     def tearDown(self):
         pass
 
-        # Partie James
     @patch("crud.CRUD.read_users_file")    
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.modify_users_file")
@@ -92,8 +91,7 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         self.assertEqual(crud.get_user_data(100,"name"),False)
 
-        
-# ?
+
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_false_for_invalid_field(self, mock_read_users_file):
         """Description: il faut utiliser le mock de fonction "read_groups_file",
@@ -157,8 +155,7 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         self.assertEqual(crud.get_user_id("InvalidName"),False)
 
-        
-  # Partie Masabbir
+
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_id_for_valid_user_name(self, mock_read_users_file):
         mock_read_users_file.return_value = self.users_data
@@ -265,7 +262,6 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         self.assertFalse(crud.remove_user(3)) # ID inexistant
 
-        # partie de Nicolas
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
     def test_remove_user_Passes_correct_value_to_modify_users_file(
